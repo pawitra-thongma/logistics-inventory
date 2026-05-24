@@ -47,7 +47,7 @@
 
 ### Use Case Diagram
 
-![Use Case Diagram](images/usecase.png)
+![Use Case Diagram](https://github.com/pawitra-thongma/logistics-inventory/blob/0de516cff442d2a3bdca11bcb6f7010dd0822232/Ues%20case.png)
 
 | Actor | Use Cases |
 |---|---|
@@ -56,7 +56,7 @@
 
 ### ER Diagram
 
-![ER Diagram](images/er_diagram.png)
+![ER Diagram](https://github.com/pawitra-thongma/logistics-inventory/blob/0de516cff442d2a3bdca11bcb6f7010dd0822232/ER%20.png)
 
 **8 Entities:**
 
@@ -70,25 +70,6 @@
 | การเบิก/ขาย (Stock Out) | รหัสการขาย, วันที่ขาย, รหัสลูกค้า, จำนวน, ราคารวม |
 | การชำระเงิน (Payment) | รหัสการชำระ, วันที่, จำนวนเงิน, วิธีชำระ, สถานะ |
 | รายงาน (Report) | รหัสรายงาน, ประเภทรายงาน, ช่วงวันที่, ข้อมูลสรุป |
-
----
-
-## Screenshots
-
-### หน้า Login และ Dashboard
-![Login & Dashboard](images/login_dashboard.png)
-
-### หน้าจัดการสินค้า และ ประเภทสินค้า
-![Product Management](images/product_category.png)
-
-### หน้าจัดการพนักงาน และ การสั่งซื้อ
-![Employee & Orders](images/employee_orders.png)
-
-### หน้านำเข้าสินค้า และ ขายสินค้า
-![Stock In & Out](images/stockin_stockout.png)
-
-### หน้าชำระเงิน และ รายงาน
-![Payment & Reports](images/payment_report.png)
 
 ---
 
