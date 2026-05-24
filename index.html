@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wholesale Management System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Sarabun', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .login-bg { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .card-modern { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border:1px solid rgba(255,255,255,0.2); box-shadow:0 8px 32px rgba(0,0,0,.1); transition:.3s; }
+    .card-modern:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.15); }
+    .mobile-nav-item { transition: .3s; border-radius: 12px; }
+    .mobile-nav-item.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:#fff; transform: scale(1.05); }
+    .floating-btn { position: fixed; bottom: 20px; right: 20px; z-index: 1000; box-shadow: 0 8px 25px rgba(102,126,234,.3); }
+    .mobile-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); backdrop-filter: blur(10px); }
+    .bottom-nav { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(0,0,0,0.1); }
+    .mobile-card { background:#fff; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,.08); margin-bottom:16px; padding:16px; }
+    .status-badge { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500; }
+    .stats-card { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+    .stats-card-2 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+    .stats-card-3 { background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); }
+    .stats-card-4 { background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); }
+    .hidden { display:none !important; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Login Screen -->
+  <div id="loginScreen" class="min-h-screen login-bg flex items-center justify-center p-4">
+    <div class="card-modern rounded-3xl p-8 w-full max-w-md">
+      <div class="text-center mb-8">
+        <div class="w-20 h-20 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-warehouse text-3xl text-white"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">Wholesale System</h1>
+        <p class="text-gray-600">ระบบจัดการร้านขายส่ง</p>
+      </div>
+
+      <form id="loginForm" class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้ใช้</label>
+          <div class="relative">
+            <i class="fas fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="text" id="username" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="กรอกชื่อผู้ใช้" required>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่าน</label>
+          <div class="relative">
+            <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="password" id="password" class="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="กรอกรหัสผ่าน" required>
+            <button type="button" id="togglePassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+              <i class="fas fa-eye" id="passwordToggle"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <label class="flex items-center">
+            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+            <span class="ml-2 text-sm text-gray-600">จดจำการเข้าสู่ระบบ</span>
+          </label>
+          <button type="button" id="forgotBtn" class="text-sm text-blue-600 hover:text-blue-800">
+            ลืมรหัสผ่าน?
+          </button>
+        </div>
+
+        <button type="submit" class="w-full gradient-bg text-white py-3 rounded-xl font-medium hover:opacity-90 transition-all">
+          <i class="fas fa-sign-in-alt mr-2"></i>เข้าสู่ระบบ
+        </button>
+      </form>
+
+      <div class="mt-6 p-4 bg-blue-50 rounded-xl">
+        <p class="text-sm text-blue-800 font-medium mb-2">ข้อมูลทดสอบ:</p>
+        <p class="text-xs text-blue-600">แอดมิน: admin / admin123</p>
+        <p class="text-xs text-blue-600">พนักงาน: staff / staff123</p>
+      </div>
+
+      <div class="mt-6 p-4 bg-white rounded-xl">
+        <h3 class="text-sm font-medium text-gray-800 mb-2">สมัครผู้ใช้ใหม่</h3>
+        <form id="registerForm" class="grid grid-cols-3 gap-2">
+          <input id="regUsername" class="col-span-3 border border-gray-200 rounded-xl px-3 py-2" placeholder="ชื่อผู้ใช้" required>
+          <input id="regPassword" class="col-span-3 border border-gray-200 rounded-xl px-3 py-2" placeholder="รหัสผ่าน" required>
+          <select id="regRole" class="col-span-2 border border-gray-200 rounded-xl px-3 py-2">
+            <option value="staff">พนักงาน</option>
+            <option value="manager">แอดมิน</option>
+          </select>
+          <button class="col-span-1 gradient-bg text-white rounded-xl px-3 py-2">สมัคร</button>
+        </form>
+        <p class="text-xs text-gray-500 mt-2">* ผู้สมัครใหม่จะอยู่ในสถานะรออนุมัติ และแอดมินจะได้รับการแจ้งเตือน</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Application -->
+  <div id="mainApp" class="hidden">
+    <!-- Mobile Header -->
+    <header class="mobile-header text-white shadow-lg sticky top-0 z-50">
+      <div class="px-4 py-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <i class="fas fa-warehouse text-lg"></i>
+            </div>
+            <div>
+              <h1 class="text-lg font-bold">Wholesale</h1>
+              <p class="text-xs opacity-80" id="userRole">ระบบจัดการร้านขายส่ง</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 relative">
+            <button id="notifBell" class="relative w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <i class="fas fa-bell text-sm"></i>
+              <span id="notifBadge" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center">0</span>
+            </button>
+            <div id="notifPanel" class="hidden absolute right-0 top-12 w-80 bg-white rounded-xl shadow-lg z-50"></div>
+
+            <button id="userMenuBtn" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <i class="fas fa-user text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- User Menu Dropdown -->
+    <div id="userMenu" class="hidden fixed top-16 right-4 bg-white rounded-xl shadow-lg z-50 w-56">
+      <div class="p-4 border-b">
+        <p class="font-medium text-gray-800" id="currentUser">ผู้ใช้งาน</p>
+        <p class="text-sm text-gray-500" id="currentUserRole">บทบาท</p>
+      </div>
+      <div class="p-2">
+        <button id="openProfileBtn" class="w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg flex items-center space-x-2">
+          <i class="fas fa-user-cog text-sm"></i>
+          <span>ตั้งค่าโปรไฟล์</span>
+        </button>
+        <hr class="my-2">
+        <button id="logoutBtn" class="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg flex items-center space-x-2">
+          <i class="fas fa-sign-out-alt text-sm"></i>
+          <span>ออกจากระบบ</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pb-20 px-4 pt-4">
+      <!-- Dashboard Section -->
+      <section id="dashboard" class="section">
+        <div class="mb-6">
+          <h2 class="text-xl font-bold text-gray-800 mb-2">แดชบอร์ด</h2>
+          <p class="text-gray-600 text-sm">ภาพรวมธุรกิจของคุณ</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-6">
+          <div class="stats-card text-black p-4 rounded-2xl card-modern text-center">
+            <i class="fas fa-boxes text-2xl mb-2 opacity-90"></i>
+            <p class="text-xs opacity-90 mb-1">สินค้าในคลังทั้งหมด</p>
+            <p id="statTotalStock" class="text-lg font-bold">0</p>
+          </div>
+          <div class="stats-card-2 text-black p-4 rounded-2xl card-modern text-center">
+            <i class="fas fa-chart-line text-2xl mb-2 opacity-90"></i>
+            <p class="text-xs opacity-90 mb-1">ยอดขายวันนี้</p>
+            <p class="text-lg font-bold">฿45,680</p>
+          </div>
+          <div class="stats-card-3 text-black p-4 rounded-2xl card-modern text-center">
+            <i class="fas fa-users text-2xl mb-2 opacity-90"></i>
+            <p class="text-xs opacity-90 mb-1">ผู้ใช้งานทั้งหมด</p>
+            <p id="statUserCount" class="text-lg font-bold">0</p>
+          </div>
+          <div class="stats-card-4 text-black p-4 rounded-2xl card-modern text-center">
+            <i class="fas fa-users-cog text-2xl mb-2 opacity-90"></i>
+            <p class="text-xs opacity-90 mb-1">ผู้สมัครรออนุมัติ</p>
+            <p id="statPending" class="text-lg font-bold">0</p>
+          </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="card-modern rounded-2xl p-4 mb-4">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">กิจกรรมล่าสุด</h3>
+          <div id="activityList" class="space-y-3"></div>
+        </div>
+
+        <!-- Low Stock (bottom line) -->
+        <div class="card-modern rounded-2xl p-4 mb-4">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">สินค้าเหลือน้อย</h3>
+          <div id="lowStockBox" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- Products Section -->
+      <section id="products" class="section hidden">
+        <div class="mb-6">
+          <h2 class="text-xl font-bold text-gray-800 mb-2">จัดการสินค้า</h2>
+          <p class="text-gray-600 text-sm">รายการสินค้าทั้งหมดในระบบ</p>
+        </div>
+
+        <div class="card-modern rounded-2xl p-4 mb-4">
+          <div class="relative">
+            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input id="productSearch" type="text" placeholder="ค้นหาสินค้า..." class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          </div>
+        </div>
+
+        <div id="productsListMobile" class="space-y-3"></div>
+      </section>
+
+      <!-- Admin: Approvals -->
+      <section id="admin" class="section hidden">
+        <div class="mb-6">
+          <h2 class="text-xl font-bold text-gray-800 mb-2">อนุมัติผู้ใช้</h2>
+          <p class="text-gray-600 text-sm">อนุมัติ/ปฏิเสธคำขอสมัคร และกำหนดบทบาท</p>
+        </div>
+        <div id="pendingUsers" class="space-y-3"></div>
+      </section>
+
+      <!-- Employees Management (Admin only) -->
+      <section id="employees" class="section hidden">
+        <div class="mb-6">
+          <h2 class="text-xl font-bold text-gray-800 mb-2">จัดการพนักงาน</h2>
+          <p class="text-gray-600 text-sm">ค้นหา/เพิ่ม/แก้ไข/ลบ และกำหนดบทบาท</p>
+        </div>
+
+        <div class="card-modern rounded-2xl p-4 mb-4">
+          <div class="grid grid-cols-3 gap-3">
+            <div class="col-span-2 relative">
+              <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              <input id="empSearch" type="text" placeholder="ค้นหาพนักงาน..." class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <button id="empAddBtn" class="gradient-bg text-white rounded-xl font-medium px-4 py-2">
+              <i class="fas fa-user-plus mr-1"></i> เพิ่มพนักงาน
+            </button>
+          </div>
+        </div>
+
+        <div id="employeesList" class="space-y-3"></div>
+      </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 px-4 py-2">
+      <div class="flex justify-around items-center">
+        <button onclick="UI.showSection(event,'dashboard'); UI.renderStats();" class="mobile-nav-item active flex flex-col items-center p-2">
+          <i class="fas fa-home text-lg mb-1"></i>
+          <span class="text-xs">หน้าหลัก</span>
+        </button>
+        <button onclick="UI.showSection(event,'products'); UI.renderProductsList();" class="mobile-nav-item flex flex-col items-center p-2">
+          <i class="fas fa-box text-lg mb-1"></i>
+          <span class="text-xs">สินค้า</span>
+        </button>
+        <button id="adminNavBtn" onclick="UI.showSection(event,'admin'); UI.renderPendingUsers();" class="mobile-nav-item flex flex-col items-center p-2 hidden">
+          <i class="fas fa-user-check text-lg mb-1"></i>
+          <span class="text-xs">อนุมัติผู้ใช้</span>
+        </button>
+        <button id="employeesNavBtn" onclick="UI.showSection(event,'employees'); UI.renderEmployees();" class="mobile-nav-item flex flex-col items-center p-2 hidden">
+          <i class="fas fa-users-cog text-lg mb-1"></i>
+          <span class="text-xs">พนักงาน</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Floating Action Button -->
+    <button onclick="UI.openAddProductModal()" class="floating-btn w-14 h-14 gradient-bg text-white rounded-full flex items-center justify-center">
+      <i class="fas fa-plus text-xl"></i>
+    </button>
+  </div>
+
+  <!-- Product Modal -->
+  <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-end justify-center z-50">
+    <div class="bg-white rounded-t-3xl p-6 w-full max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h3 id="productModalTitle" class="text-xl font-bold text-gray-800">เพิ่มสินค้าใหม่</h3>
+          <p class="text-sm text-gray-500">กรอกข้อมูลสินค้าที่ต้องการเพิ่ม</p>
+        </div>
+        <button onclick="UI.closeModal('productModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+          <i class="fas fa-times text-gray-500"></i>
+        </button>
+      </div>
+      <form id="productForm">
+        <input type="hidden" id="productMode" value="create">
+        <input type="hidden" id="productOldCode" value="">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">รหัสสินค้า</label>
+            <input type="text" id="productCode" class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="เช่น P001" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อสินค้า</label>
+            <input type="text" id="productName" class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="เช่น น้ำดื่ม 600ml" required>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">ประเภท</label>
+              <select id="productCategory" class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                <option value="">เลือกประเภท</option>
+                <option value="เครื่องดื่ม">เครื่องดื่ม</option>
+                <option value="ขนม">ขนม</option>
+                <option value="อาหารแห้ง">อาหารแห้ง</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">หน่วยนับ</label>
+              <input type="text" id="productUnit" class="w-full border border-gray-200 rounded-xl px-4 py-3" placeholder="ขวด, ชิ้น" required>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">ราคา (บาท)</label>
+              <input type="number" id="productPrice" class="w-full border border-gray-200 rounded-xl px-4 py-3" placeholder="0" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">จำนวนคงเหลือ</label>
+              <input type="number" id="productStock" class="w-full border border-gray-200 rounded-xl px-4 py-3" placeholder="0" required>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">รายละเอียด</label>
+            <textarea id="productDesc" class="w-full border border-gray-200 rounded-xl px-4 py-3" placeholder="รายละเอียดสินค้าเพิ่มเติม (ถ้ามี)"></textarea>
+          </div>
+        </div>
+        <div class="flex space-x-3 mt-8 pt-4 border-t">
+          <button type="button" onclick="UI.closeModal('productModal')" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-medium">ยกเลิก</button>
+          <button type="submit" class="flex-1 gradient-bg text-white py-3 rounded-xl font-medium">บันทึกสินค้า</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- User Modal (Admin add/edit employee) -->
+  <div id="userModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-end justify-center z-50">
+    <div class="bg-white rounded-t-3xl p-6 w-full max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h3 id="userModalTitle" class="text-xl font-bold text-gray-800">เพิ่มพนักงาน</h3>
+          <p class="text-sm text-gray-500">กำหนดชื่อผู้ใช้ รหัสผ่าน และบทบาท</p>
+        </div>
+        <button onclick="UI.closeModal('userModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"><i class="fas fa-times text-gray-500"></i></button>
+      </div>
+      <form id="userForm">
+        <input type="hidden" id="uOldUsername">
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้ใช้</label>
+              <input type="text" id="uUsername" class="w-full border border-gray-200 rounded-xl px-4 py-3" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่าน</label>
+              <input type="text" id="uPassword" class="w-full border border-gray-200 rounded-xl px-4 py-3" required>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">บทบาท</label>
+            <select id="uRole" class="w-full border border-gray-200 rounded-xl px-4 py-3">
+              <option value="staff">พนักงาน</option>
+              <option value="manager">แอดมิน</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div><label class="block text-sm mb-2">ชื่อ</label><input id="uFirstName" class="w-full border border-gray-200 rounded-xl px-4 py-3"></div>
+            <div><label class="block text-sm mb-2">นามสกุล</label><input id="uLastName" class="w-full border border-gray-200 rounded-xl px-4 py-3"></div>
+            <div class="col-span-2"><label class="block text-sm mb-2">รหัสประจำตัว</label><input id="uIdNumber" class="w-full border border-gray-200 rounded-xl px-4 py-3"></div>
+            <div><label class="block text-sm mb-2">อายุ</label><input id="uAge" type="number" class="w-full border border-gray-200 rounded-xl px-4 py-3"></div>
+            <div><label class="block text-sm mb-2">เพศ</label><select id="uGender" class="w-full border border-gray-200 rounded-xl px-4 py-3"><option value="">ไม่ระบุ</option><option value="ชาย">ชาย</option><option value="หญิง">หญิง</option><option value="อื่นๆ">อื่นๆ</option></select></div>
+            <div class="col-span-2"><label class="block text-sm mb-2">ที่อยู่</label><textarea id="uAddress" class="w-full border border-gray-200 rounded-xl px-4 py-3"></textarea></div>
+            <div class="col-span-2"><label class="block text-sm mb-2">เบอร์โทร</label><input id="uPhone" class="w-full border border-gray-200 rounded-xl px-4 py-3"></div>
+          </div>
+        </div>
+        <div class="flex space-x-3 mt-8 pt-4 border-t">
+          <button type="button" onclick="UI.closeModal('userModal')" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-medium">ยกเลิก</button>
+          <button type="submit" class="flex-1 gradient-bg text-white py-3 rounded-xl font-medium">บันทึก</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-end justify-center z-50">
+    <div class="bg-white rounded-t-3xl p-6 w-full max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h3 class="text-xl font-bold text-gray-800">ตั้งค่าโปรไฟล์</h3>
+          <p class="text-sm text-gray-500">กรอกข้อมูลส่วนตัว</p>
+        </div>
+        <button onclick="UI.closeModal('profileModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"><i class="fas fa-times text-gray-500"></i></button>
+      </div>
+      <form id="profileForm">
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ</label><input id="pfFirstName" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-3"></div>
+          <div><label class="block text-sm font-medium text-gray-700 mb-2">นามสกุล</label><input id="pfLastName" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-3"></div>
+          <div class="col-span-2"><label class="block text-sm font-medium text-gray-700 mb-2">รหัสประจำตัว</label><input id="pfIdNumber" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-3"></div>
+          <div><label class="block text-sm font-medium text-gray-700 mb-2">อายุ</label><input id="pfAge" type="number" class="w-full border border-gray-200 rounded-xl px-4 py-3"></div>
+          <div><label class="block text-sm font-medium text-gray-700 mb-2">เพศ</label><select id="pfGender" class="w-full border border-gray-200 rounded-xl px-4 py-3"><option value="">ไม่ระบุ</option><option value="ชาย">ชาย</option><option value="หญิง">หญิง</option><option value="อื่นๆ">อื่นๆ</option></select></div>
+          <div class="col-span-2"><label class="block text-sm font-medium text-gray-700 mb-2">ที่อยู่</label><textarea id="pfAddress" class="w-full border border-gray-200 rounded-xl px-4 py-3"></textarea></div>
+          <div class="col-span-2"><label class="block text-sm font-medium text-gray-700 mb-2">เบอร์โทร</label><input id="pfPhone" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-3"></div>
+        </div>
+        <div class="flex space-x-3 mt-8 pt-4 border-t">
+          <button type="button" onclick="UI.closeModal('profileModal')" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-medium">ยกเลิก</button>
+          <button type="submit" class="flex-1 gradient-bg text-white py-3 rounded-xl font-medium">บันทึก</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="./store.js"></script>
+  <script src="./ui.js"></script>
+  <script src="./auth.js"></script>
+</body>
+</html>
